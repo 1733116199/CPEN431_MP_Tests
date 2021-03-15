@@ -6,7 +6,7 @@ To run the tests, you can copy the JAR file wherever you want and use the follow
 
 `java -cp  CPEN431_MP_Tests-1.0-SNAPSHOT-all.jar cpen431.mp.Tests.TestDriver 1 servers.txt 123456` where the `1` is for Milestone 1 and `servers.txt` contains a list of some DHT servers and `123456` is a student id (not critical for Milestone 1 or Milestone 2).
 
-The results if running the tests will appear in a file named `results.log`.
+The results of running the tests will appear in a file named `results.log`.
 
 If you want to run some tests for Milestone 2, replace the argument `1` with the argument `2`.
 
