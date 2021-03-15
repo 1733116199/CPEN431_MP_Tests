@@ -1,0 +1,22 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'java'
+    id "com.google.protobuf" version "0.8.15"
+}
+
+group 'ca.ece.ubc.cpen431.pa1'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.11
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.4'
+    implementation group: 'com.google.protobuf', name: 'protobuf-gradle-plugin', version: '0.8.15'
+    implementation group: 'io.grpc', name: 'grpc-all', version: '1.35.0'
+    implementation group: 'org.json', name: 'json', version: '20201115'
+}

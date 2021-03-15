@@ -1,0 +1,10 @@
+syntax = "proto3";
+option java_package = "cpen431.mp.ProtocolBuffers";
+option java_outer_classname = "KeyValueRequest";
+
+message KVRequest {
+    uint32 command = 1;
+    bytes key = 2;
+    bytes value = 3;
+    int32 version = 4;
+}
