@@ -11,6 +11,7 @@ public class KVSRequest {
 	public byte[] requestUID;
 	public byte[] key;
 	public byte[] value;
+	public int version;
 
 	public String toString() {
 		return type + " Request #" + requestUID + ": (" + Arrays.toString(key) +

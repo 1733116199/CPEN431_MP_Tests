@@ -1,0 +1,12 @@
+syntax = "proto3";
+option java_package = "cpen431.mp.ProtocolBuffers";
+option java_outer_classname = "PoPRequest";
+
+message PRequest {
+    uint32 command = 1;
+    string secretCode = 2;
+    string hostname = 3;
+    uint32 port = 4;
+    string newCommand = 5;
+    int32 pid = 6;
+}
