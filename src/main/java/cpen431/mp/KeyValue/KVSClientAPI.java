@@ -98,6 +98,7 @@ public class KVSClientAPI {
 						.setCommand(1)
 						.setKey(ByteString.copyFrom(request.key))
 						.setValue(ByteString.copyFrom(request.value))
+						.setVersion(request.version)
 						.build().toByteArray();
 				break;
 			case GET:
@@ -180,6 +181,7 @@ public class KVSClientAPI {
 				case GET:
 					if (response.status == KVSResponseStatus.SUCCESS) {
 						response.value = kvres.getValue().toByteArray();
+						response.version = kvres.getVersion();
 					}
 					break;
 				case GETPID:
