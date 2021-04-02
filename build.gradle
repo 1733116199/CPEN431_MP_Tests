@@ -2,6 +2,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'java'
     id "com.google.protobuf" version "0.8.15"
+    id "application"
 }
 
 group 'ca.ece.ubc.cpen431.mp'
@@ -28,3 +29,5 @@ jar {
         )
     }
 }
+
+mainClassName = 'cpen431.mp.Tests.TestDriver'
