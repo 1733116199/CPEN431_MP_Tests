@@ -8,9 +8,18 @@ public class TestsConfig {
     private static Random RAND = new Random();
     private static int MAX_REPEAT = 10;
     private static int MAX_REPEAT_LITE = 10;
-    private static String[]  failedServerNodes;
+    private static String[] failedServerNodes;
     private static int CLIENTS_COUNT = 16;
     private static boolean strictIsAlive = true;
+    private static int POP_NODES_THRESHOLD = 5;
+
+    public static int getPopNodesThreshold() {
+        return POP_NODES_THRESHOLD;
+    }
+
+    public static void setPopNodesThreshold(int popNodesThreshold) {
+        POP_NODES_THRESHOLD = popNodesThreshold;
+    }
 
     public static Random getRAND() {
         return RAND;
@@ -61,3 +70,4 @@ public class TestsConfig {
     }
 
 }
+

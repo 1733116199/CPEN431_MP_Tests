@@ -9,12 +9,13 @@ import java.util.Collections;
 
 public class TestUtils {
 
-    public static ArrayList<ServerNode> getServerNodes(String fileName){
+    public static ArrayList<ServerNode> getServerNodes(String fileName) {
         ArrayList<ServerNode> bigListServerNodes = null;
         try {
-            bigListServerNodes =  ServerNode.buildServerNodeList(fileName);
+            bigListServerNodes = ServerNode.buildServerNodeList(fileName);
             System.out.println("Done building node list.");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.err.println("Specified server list file not found!");
             e.printStackTrace();
         }
@@ -39,4 +40,6 @@ public class TestUtils {
 
         return code;
     }
+
 }
+

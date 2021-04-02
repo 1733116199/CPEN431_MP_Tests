@@ -13,6 +13,7 @@ public class KVSResponse {
 	public byte[] value;
 	public int pid;
 	public boolean validStat = true;
+	public int version;
 
 	public String toString() {
 		return requestType + " Response #" + requestUID + ": " + status + ", " + errorCode + ", " +
