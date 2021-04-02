@@ -25,3 +25,8 @@ target/*
 .idea/*
 
 .DS_Store
+
+servers.txt
+gradle*
+.gradle
+build
