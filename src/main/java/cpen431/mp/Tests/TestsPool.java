@@ -485,6 +485,8 @@ public class TestsPool {
         KVSClientAPI.shutdown(single);
         try {
             // Send PoP check
+            if(serverNode != null)
+                throw new Exception();
             PoPPReply reply = PoPUtils.killServerProcess(serverNode.getHostName(), secretKey, serverNode.getProcessID());
             if (reply.errorCode == PoPErrorCode.SUCCESS) {
                 System.err.println("[ERROR] The server shutdown command was not respected");
