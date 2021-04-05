@@ -183,7 +183,7 @@ public class TestDriver {
         final int[] BASIC_TEST_VALUE_SIZES = new int[]{8, 32, 128, 256};
         final int[] CLIENT_TYPES_LOCAL_SERVER = new int[]{1, 64, 512};
         final int[] CLIENT_TYPES_SINGLE_SERVER = new int[]{1, 16, 32};
-        final int[] CLIENT_TYPES = new int[]{65536};
+        final int[] CLIENT_TYPES = new int[]{1024, 2048, 4096, 8192, 8192 * 2};
         final int SUBMIT_NODE_COUNT = 24;
         final int SHUTDOWN_NODE_COUNT = 20;
         final double LOWERBOUND_ALLOWED = 0.0;
@@ -334,23 +334,23 @@ public class TestDriver {
         System.out.println("Waiting for a few seconds.");
         Tests.pause(6);
 
-        // Single server performance test.
-        for (int clients : CLIENT_TYPES_SINGLE_SERVER) {
-            Tests.testUtilStartTimer();
-            KVSTestStats testSingleServerStats = new KVSTestStats();
-            TestsPool.testSinglePerformanceTimed(bigListServerNodes.get(0), clients, testSingleServerStats, PERF_TEST_TIMER);
-            if (testSingleServerStats.getResponseCount() != 0) {
-                testSingleServerStats.printAggregateSummaryStats(resultMap, "Stage 1 Single Front-End");
-            } else {
-                System.err.println("No response statistics collected!");
-            }
-            // Wipe-out.
-            if (TestsPool.testWipeoutAll(bigListServerNodes) != TestStatus.TEST_PASSED) {
-                System.err.println("Unsuccessful wipe-out. Aborting.");
-                return;
-            }
-            Tests.testUtilElapsedTime();
-        }
+        // // Single server performance test.
+        // for (int clients : CLIENT_TYPES_SINGLE_SERVER) {
+        //     Tests.testUtilStartTimer();
+        //     KVSTestStats testSingleServerStats = new KVSTestStats();
+        //     TestsPool.testSinglePerformanceTimed(bigListServerNodes.get(0), clients, testSingleServerStats, PERF_TEST_TIMER);
+        //     if (testSingleServerStats.getResponseCount() != 0) {
+        //         testSingleServerStats.printAggregateSummaryStats(resultMap, "Stage 1 Single Front-End");
+        //     } else {
+        //         System.err.println("No response statistics collected!");
+        //     }
+        //     // Wipe-out.
+        //     if (TestsPool.testWipeoutAll(bigListServerNodes) != TestStatus.TEST_PASSED) {
+        //         System.err.println("Unsuccessful wipe-out. Aborting.");
+        //         return;
+        //     }
+        //     Tests.testUtilElapsedTime();
+        // }
 
         // Distributed performance test.
         for (int clients : CLIENT_TYPES) {
@@ -390,121 +390,121 @@ public class TestDriver {
         }
 
         // Insert capacity.
-        Tests.testUtilStartTimer();
-        TestStatus capStatus = TestsPool.testInsertCapacity(bigListServerNodes, CAPACITY_INPUT_SIZE,
-                CAPACITY_INPUT, CAPA_TEST_TIMER, resultMap, TestsConfig.getClientsCount());
-        if (capStatus != TestStatus.TEST_PASSED) {
-            System.err.println("Capacity insert failed. Aborting.");
-            return;
-        }
-        System.out.println(capStatus);
-        Tests.testUtilElapsedTime();
+        // Tests.testUtilStartTimer();
+        // TestStatus capStatus = TestsPool.testInsertCapacity(bigListServerNodes, CAPACITY_INPUT_SIZE,
+        //         CAPACITY_INPUT, CAPA_TEST_TIMER, resultMap, TestsConfig.getClientsCount());
+        // if (capStatus != TestStatus.TEST_PASSED) {
+        //     System.err.println("Capacity insert failed. Aborting.");
+        //     return;
+        // }
+        // System.out.println(capStatus);
+        // Tests.testUtilElapsedTime();
 
-        TestsConfig.setStrictIsAlive(false); // 'is alive' tests are relaxed from this point onwards
+        // TestsConfig.setStrictIsAlive(false); // 'is alive' tests are relaxed from this point onwards
 
-        // First Crash test -- first, set up list of nodes to crash.
-        ArrayList<ServerNode> crashList = new ArrayList<ServerNode>();
-        ArrayList<ServerNode> aliveList = new ArrayList<ServerNode>();
-        ArrayList<ServerNode> tempList = new ArrayList<ServerNode>(bigListServerNodes);
+        // // First Crash test -- first, set up list of nodes to crash.
+        // ArrayList<ServerNode> crashList = new ArrayList<ServerNode>();
+        // ArrayList<ServerNode> aliveList = new ArrayList<ServerNode>();
+        // ArrayList<ServerNode> tempList = new ArrayList<ServerNode>(bigListServerNodes);
 
-        // Assign first node to alive list.
-        tempList.remove(0);
-        aliveList.add(bigListServerNodes.get(0));
+        // // Assign first node to alive list.
+        // tempList.remove(0);
+        // aliveList.add(bigListServerNodes.get(0));
 
-        Collections.shuffle(tempList);
-        int numKill = SHUTDOWN_NODE_COUNT; //(int) Math.ceil(bigListServerNodes.size() * PERCENT_SHUTDOWN);
-        System.out.println("Rolling crash test: to shutdown - " + numKill + " nodes.");
+        // Collections.shuffle(tempList);
+        // int numKill = SHUTDOWN_NODE_COUNT; //(int) Math.ceil(bigListServerNodes.size() * PERCENT_SHUTDOWN);
+        // System.out.println("Rolling crash test: to shutdown - " + numKill + " nodes.");
 
-        if (bigListServerNodes.size() < (numKill + 1)) {
-            System.err.println("Error: need at least " + (numKill + 1) + " nodes to run the crash test. Aborting.");
-            return;
-        }
+        // if (bigListServerNodes.size() < (numKill + 1)) {
+        //     System.err.println("Error: need at least " + (numKill + 1) + " nodes to run the crash test. Aborting.");
+        //     return;
+        // }
 
-        // Assign nodes to crash or alive lists.
-        for (ServerNode node : tempList) {
-            if (numKill > 0) {
-                crashList.add(node);
-                numKill--;
-            } else {
-                aliveList.add(node);
-            }
-        }
+        // // Assign nodes to crash or alive lists.
+        // for (ServerNode node : tempList) {
+        //     if (numKill > 0) {
+        //         crashList.add(node);
+        //         numKill--;
+        //     } else {
+        //         aliveList.add(node);
+        //     }
+        // }
 
-        // Execute first crash test on alive-list and crash-list of nodes.
-        Tests.testUtilStartTimer();
-        StringBuilder resultString = new StringBuilder();
-        TestStatus crashStatus = TestsPool.testRollingCrashVerifyWithExtraLoad(aliveList, crashList, CAPACITY_INPUT_SIZE, CAPACITY_INPUT, CAPA_TEST_TIMER, LOWERBOUND_ALLOWED, UPPERBOUND_ALLOWED,
-                resultString, TestsConfig.getClientsCount(), PAUSE_SECONDS, resultMap, MAX_KEYS_SC, secret);
-        if (crashStatus != TestStatus.TEST_PASSED) {
-            System.err.println("Crash test failed. Aborting.");
-            return;
-        }
-        System.out.println(crashStatus);
-        resultMap.add(new KVSResultField("Test Rolling Crash; Key Recovery", "PASSED"));
-        resultMap.add(new KVSResultField("Test Rolling Crash; % Keys failed", resultString.toString()));
+        // // Execute first crash test on alive-list and crash-list of nodes.
+        // Tests.testUtilStartTimer();
+        // StringBuilder resultString = new StringBuilder();
+        // TestStatus crashStatus = TestsPool.testRollingCrashVerifyWithExtraLoad(aliveList, crashList, CAPACITY_INPUT_SIZE, CAPACITY_INPUT, CAPA_TEST_TIMER, LOWERBOUND_ALLOWED, UPPERBOUND_ALLOWED,
+        //         resultString, TestsConfig.getClientsCount(), PAUSE_SECONDS, resultMap, MAX_KEYS_SC, secret);
+        // if (crashStatus != TestStatus.TEST_PASSED) {
+        //     System.err.println("Crash test failed. Aborting.");
+        //     return;
+        // }
+        // System.out.println(crashStatus);
+        // resultMap.add(new KVSResultField("Test Rolling Crash; Key Recovery", "PASSED"));
+        // resultMap.add(new KVSResultField("Test Rolling Crash; % Keys failed", resultString.toString()));
 
-        // Wipe-out.
-        if (TestsPool.testWipeoutAll(aliveList) != TestStatus.TEST_PASSED) {
-            System.err.println("Unsuccessful wipe-out. Aborting.");
-            return;
-        }
-        Tests.testUtilElapsedTime();
+        // // Wipe-out.
+        // if (TestsPool.testWipeoutAll(aliveList) != TestStatus.TEST_PASSED) {
+        //     System.err.println("Unsuccessful wipe-out. Aborting.");
+        //     return;
+        // }
+        // Tests.testUtilElapsedTime();
 
-        // Second set of Single server performance test (first node).
-        for (int clients : CLIENT_TYPES_SINGLE_SERVER) {
-            Tests.testUtilStartTimer();
-            KVSTestStats testSingleServerStats = new KVSTestStats();
-            TestsPool.testSinglePerformanceTimed(aliveList.get(0), clients, testSingleServerStats, PERF_TEST_TIMER);
-            if (testSingleServerStats.getResponseCount() != 0) {
-                testSingleServerStats.printAggregateSummaryStats(resultMap, "Stage 2 Single Front-End");
-            } else {
-                System.err.println("No response statistics collected!");
-            }
+        // // Second set of Single server performance test (first node).
+        // for (int clients : CLIENT_TYPES_SINGLE_SERVER) {
+        //     Tests.testUtilStartTimer();
+        //     KVSTestStats testSingleServerStats = new KVSTestStats();
+        //     TestsPool.testSinglePerformanceTimed(aliveList.get(0), clients, testSingleServerStats, PERF_TEST_TIMER);
+        //     if (testSingleServerStats.getResponseCount() != 0) {
+        //         testSingleServerStats.printAggregateSummaryStats(resultMap, "Stage 2 Single Front-End");
+        //     } else {
+        //         System.err.println("No response statistics collected!");
+        //     }
 
-            // Wipe-out.
-            if (TestsPool.testWipeoutAll(aliveList) != TestStatus.TEST_PASSED) {
-                System.err.println("Unsuccessful wipe-out. Aborting.");
-                return;
-            }
-            Tests.testUtilElapsedTime();
-        }
+        //     // Wipe-out.
+        //     if (TestsPool.testWipeoutAll(aliveList) != TestStatus.TEST_PASSED) {
+        //         System.err.println("Unsuccessful wipe-out. Aborting.");
+        //         return;
+        //     }
+        //     Tests.testUtilElapsedTime();
+        // }
 
-        // Second set of Distributed performance test (alive list).
-        for (int clients : CLIENT_TYPES) {
-            Tests.testUtilStartTimer();
-            TestStatus status;
-            KVSTestStats testStats = new KVSTestStats();
-            if ((clients < 1024) || (clients == 1024 && !exclude1024) || (clients == 2048 && !exclude2048)) {
-                status = TestsPool.testDistributedPerformanceTimed(aliveList, clients, testStats, PERF_TEST_TIMER);
-            } else {
-                status = TestStatus.TEST_PASSED;
-            }
+        // // Second set of Distributed performance test (alive list).
+        // for (int clients : CLIENT_TYPES) {
+        //     Tests.testUtilStartTimer();
+        //     TestStatus status;
+        //     KVSTestStats testStats = new KVSTestStats();
+        //     if ((clients < 1024) || (clients == 1024 && !exclude1024) || (clients == 2048 && !exclude2048)) {
+        //         status = TestsPool.testDistributedPerformanceTimed(aliveList, clients, testStats, PERF_TEST_TIMER);
+        //     } else {
+        //         status = TestStatus.TEST_PASSED;
+        //     }
 
-            System.out.println(status);
+        //     System.out.println(status);
 
-            String s2 = "NA";
-            if (clients >= 32) {
-                s2 = OSUtils.loadavg();
-            }
+        //     String s2 = "NA";
+        //     if (clients >= 32) {
+        //         s2 = OSUtils.loadavg();
+        //     }
 
-            if (testStats.getResponseCount() != 0) {
-                testStats.printAggregateSummaryStats(resultMap, "Stage 2 Random Front-End", s2, clients);
-            } else {
-                System.err.println("No response statistics collected!");
-            }
+        //     if (testStats.getResponseCount() != 0) {
+        //         testStats.printAggregateSummaryStats(resultMap, "Stage 2 Random Front-End", s2, clients);
+        //     } else {
+        //         System.err.println("No response statistics collected!");
+        //     }
 
-            if (status != TestStatus.TEST_PASSED) {
-                System.err.println("Test did not pass. Aborting. Maximum Clients = " + clients);
-                return;
-            }
+        //     if (status != TestStatus.TEST_PASSED) {
+        //         System.err.println("Test did not pass. Aborting. Maximum Clients = " + clients);
+        //         return;
+        //     }
 
-            // Wipe-out.
-            if (TestsPool.testWipeoutAll(aliveList) != TestStatus.TEST_PASSED) {
-                System.err.println("Unsuccessful wipe-out. Aborting.");
-                return;
-            }
-            Tests.testUtilElapsedTime();
-        }
+        //     // Wipe-out.
+        //     if (TestsPool.testWipeoutAll(aliveList) != TestStatus.TEST_PASSED) {
+        //         System.err.println("Unsuccessful wipe-out. Aborting.");
+        //         return;
+        //     }
+        //     Tests.testUtilElapsedTime();
+        // }
 
         // Ensure shutdown obeyed.
 //        Tests.testUtilStartTimer();
@@ -515,11 +515,11 @@ public class TestDriver {
 //        Tests.testUtilElapsedTime();
 
         // Report how many nodes are still up
-        resultMap.add(new KVSResultField("Number of alive nodes after tests are completed", Integer.toString(TestsPool.testDeadOrAlive(bigListServerNodes))));
+        // resultMap.add(new KVSResultField("Number of alive nodes after tests are completed", Integer.toString(TestsPool.testDeadOrAlive(bigListServerNodes))));
 
-        System.out.println();
-        String code = TestUtils.printResultMapSummary(resultMap);
-        resultMap.add(new KVSResultField("Verification Code", code));
+        // System.out.println();
+        // String code = TestUtils.printResultMapSummary(resultMap);
+        // resultMap.add(new KVSResultField("Verification Code", code));
 
         System.out.println("Completed Milestone 3 Smoke Tests.");
     }
