@@ -183,7 +183,7 @@ public class TestDriver {
         final int[] BASIC_TEST_VALUE_SIZES = new int[]{8, 32, 128, 256};
         final int[] CLIENT_TYPES_LOCAL_SERVER = new int[]{1, 64, 512};
         final int[] CLIENT_TYPES_SINGLE_SERVER = new int[]{1, 16, 32};
-        final int[] CLIENT_TYPES = new int[]{1024, 2048, 4096, 8192, 65536};
+        final int[] CLIENT_TYPES = new int[]{2048, 4096, 8192, 65536};
         final int SUBMIT_NODE_COUNT = 24;
         final int SHUTDOWN_NODE_COUNT = 20;
         final double LOWERBOUND_ALLOWED = 0.0;
@@ -284,7 +284,7 @@ public class TestDriver {
         TestStatus statusAtMostOnce = TestsPool.testAtMostOncePolicy(bigListServerNodes);
         switch (statusAtMostOnce) {
             case TEST_PASSED:
-                resultMap.add(new KV || (clients == 1024 && !exclude1024) || (clients == 2048 && !exclude2048)SResultField("Test Single Server At-Most-Once Client Policy", "PASSED"));
+                resultMap.add(new KVSResultField("Test Single Server At-Most-Once Client Policy", "PASSED"));
                 break;
             case TEST_UNDECIDED:
                 System.out.println(">>> Server node " + bigListServerNodes.get(0).getHostName() + " is not behaving as expected.");
@@ -357,7 +357,7 @@ public class TestDriver {
             Tests.testUtilStartTimer();
             TestStatus status;
             KVSTestStats testStats = new KVSTestStats();
-            if (clients < 65535 * 2) {
+            if (clients < 65536 * 2) {
                 status = TestsPool.testDistributedPerformanceTimed(bigListServerNodes, clients, testStats, PERF_TEST_TIMER);
             } else {
                 status = TestStatus.TEST_PASSED;
