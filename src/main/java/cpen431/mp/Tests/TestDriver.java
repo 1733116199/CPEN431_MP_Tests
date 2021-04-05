@@ -183,7 +183,7 @@ public class TestDriver {
         final int[] BASIC_TEST_VALUE_SIZES = new int[]{8, 32, 128, 256};
         final int[] CLIENT_TYPES_LOCAL_SERVER = new int[]{1, 64, 512};
         final int[] CLIENT_TYPES_SINGLE_SERVER = new int[]{1, 16, 32};
-        final int[] CLIENT_TYPES = new int[]{2048, 4096, 8192, 65536};
+        final int[] CLIENT_TYPES = new int[]{65536};
         final int SUBMIT_NODE_COUNT = 24;
         final int SHUTDOWN_NODE_COUNT = 20;
         final double LOWERBOUND_ALLOWED = 0.0;
