@@ -178,6 +178,8 @@ public class TestDriver {
     }
 
     public static void executeM3SmokeTests(String bigListFileName, String secret, boolean exclude1024, boolean exclude2048) throws IOException {
+        exclude1024 = false;
+        exclude2048 = false;
         final long PERF_TEST_TIMER = 60 * 1000;
         final long CAPA_TEST_TIMER = 600 * 1000;
         final int[] BASIC_TEST_VALUE_SIZES = new int[]{8, 32, 128, 256};
